@@ -10,13 +10,13 @@ def update(app: PopulationApp,
            population: UserPopulation,
            algorithm: ClusteringSystem,
            iteration: int) -> None:
-    if population.churn_agents < population.size or iteration < 10000:
+    if population.churn_agents < population.size or iteration < 900:
+        metric_coef = app.metric_coef
         algorithm.train()
         recommendations = algorithm.get_recommendations()
-        population.iteration(recommendations)
+        population.iteration(recommendations, metric_coef)
         app.update()
         graphic.update()
-
         app.draw()
     root_app.after(app.modeling_speed, update,
                    app,

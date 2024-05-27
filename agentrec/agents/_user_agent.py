@@ -78,12 +78,13 @@ class UserAgent(_AbstractAgent):
             )
 
     def _metric_recommendations(self,
-                                recommendation: int | None) -> None:
-        # TODO: mechanism of rating recommendation
+                                recommendation: int | None,
+                                metric_coef: int) -> None:
         if recommendation is not None:
             buffer = self.ratings.copy()
             np.random.shuffle(buffer)
-            rate = (sum([x ** i for i, x in enumerate(buffer)]) + time()) % 6
+            rate = abs(sum([(x - metric_coef) ** i
+                           for i, x in enumerate(buffer)]) + time()) % 6
             rate = 1 if rate == 0 else rate
             self.ratings[recommendation] = rate
             if rate <= int(config['products']['NegativeRate']):
@@ -94,9 +95,10 @@ class UserAgent(_AbstractAgent):
                 self._state = self.States.POSITIVE
 
     def change_state(self,
-                     recommendation: int | None) -> None:
+                     recommendation: int | None,
+                     metric_coef: int) -> None:
         if self._state != self.States.CHURN:
-            self._metric_recommendations(recommendation)
+            self._metric_recommendations(recommendation, metric_coef)
 
             self._change_rating()
 

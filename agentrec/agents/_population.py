@@ -38,9 +38,10 @@ class UserPopulation(_AbstractPopulation):
         return sum(1 for agent in self.agents
                    if agent.state == agent.States.CHURN)
 
-    def iteration(self, recommendations: list) -> None:
+    def iteration(self, recommendations: list,
+                  metric_coef: int) -> None:
         for agent, rec in zip(self.agents, recommendations):
-            agent.change_state(rec)
+            agent.change_state(rec, metric_coef)
 
         rate = float(config['agents']['NewAgentChance'])
         choice = choices([False, True], weights=[1 - rate, rate], k=1)[0]

@@ -29,9 +29,19 @@ class PopulationApp(tk.Frame):
         self.speed_slider.set(1)
         self.speed_slider.pack()
 
+        self.metric_slider = tk.Scale(self,
+                                      from_=1, to=5,
+                                      orient='horizontal')
+        self.metric_slider.set(1)
+        self.metric_slider.pack()
+
     @property
     def modeling_speed(self) -> int:
         return 100 // int(self.speed_slider.get())
+
+    @property
+    def metric_coef(self) -> int:
+        return int(self.metric_slider.get())
 
     def draw(self):
         self.canvas.delete("all")

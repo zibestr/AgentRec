@@ -12,7 +12,8 @@ class _AbstractAgent(ABC):
 
     @abstractmethod
     def change_state(self,
-                     recommendation: int | None) -> None:
+                     recommendation: int | None,
+                     metric_coef: int) -> None:
         raise NotImplementedError
 
     @property
@@ -24,5 +25,5 @@ class _AbstractPopulation(ABC):
     agents: list[_AbstractAgent]
 
     @abstractmethod
-    def iteration(self, recommendations) -> None:
+    def iteration(self, recommendations, metric_coef: int) -> None:
         raise NotImplementedError

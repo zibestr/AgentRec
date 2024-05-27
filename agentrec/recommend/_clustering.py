@@ -12,8 +12,9 @@ config.read('settings.ini')
 class ClusteringSystem(_AbstactRecommendationAlgorithm):
     def __init__(self, population: _AbstractPopulation):
         super().__init__(population)
-        self._clustering = KMeans(n_clusters=int(
-            config['ranking']['ClustersCount'])
+        self._clustering = KMeans(
+            n_clusters=int(config['ranking']['ClustersCount']),
+            max_iter=int(config['ranking']['MaxIter'])
         )
 
     @property
