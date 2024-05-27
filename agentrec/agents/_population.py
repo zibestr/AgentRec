@@ -11,7 +11,7 @@ config.read('settings.ini')
 class UserPopulation(_AbstractPopulation):
     def __init__(self):
         self.agents = [UserAgent() for _ in range(
-            int(config['agents']['PopulationSize'])
+            int(config['agents']['InitPopulationSize'])
         )]
 
     @property
@@ -39,12 +39,13 @@ class UserPopulation(_AbstractPopulation):
                    if agent.state == agent.States.CHURN)
 
     def iteration(self, recommendations: list) -> None:
-        for i, agent in enumerate(self.agents):
-            agent.change_state(recommendations[i])
+        for agent, rec in zip(self.agents, recommendations):
+            agent.change_state(rec)
 
         rate = float(config['agents']['NewAgentChance'])
         choice = choices([False, True], weights=[1 - rate, rate], k=1)[0]
 
-        if choice:
-            num_agents = np.random.randint(1, 3)
-            self.agents += [UserAgent() for _ in range(num_agents)]
+        if len(self.agents) <= int(config['agents']['MaxPopulationSize']):
+            if choice:
+                num_agents = np.random.randint(1, 3)
+                self.agents += [UserAgent() for _ in range(num_agents)]

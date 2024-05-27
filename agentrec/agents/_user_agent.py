@@ -3,6 +3,7 @@ from enum import Enum
 import numpy as np
 from random import choices
 import configparser
+from time import time
 
 config = configparser.ConfigParser()
 config.read('settings.ini')
@@ -82,7 +83,7 @@ class UserAgent(_AbstractAgent):
         if recommendation is not None:
             buffer = self.ratings.copy()
             np.random.shuffle(buffer)
-            rate = sum([x ** i for i, x in enumerate(buffer)]) % 6
+            rate = (sum([x ** i for i, x in enumerate(buffer)]) + time()) % 6
             rate = 1 if rate == 0 else rate
             self.ratings[recommendation] = rate
             if rate <= int(config['products']['NegativeRate']):
